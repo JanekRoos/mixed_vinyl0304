@@ -1,0 +1,23 @@
+[33mcommit a2a969c931a7a71d2e48b32cba99cec38eadd09d[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Author: Janek.Parviste <janek.roos@yandex.ru>
+Date:   Mon Apr 3 16:13:58 2023 +0300
+
+    Add initial set of files
+
+.env
+.gitignore
+bin/console
+composer.json
+composer.lock
+config/bundles.php
+config/packages/cache.yaml
+config/packages/framework.yaml
+config/packages/routing.yaml
+config/preload.php
+config/routes.yaml
+config/routes/framework.yaml
+config/services.yaml
+public/index.php
+src/Controller/.gitignore
+src/Kernel.php
+symfony.lock
