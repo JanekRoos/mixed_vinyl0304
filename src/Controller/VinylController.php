@@ -2,7 +2,10 @@
 
 namespace App\Controller;
 
-use App\Service\MixRepository;
+//050923 use App\Entity\VinylMix;
+use App\Repository\VinylMixRepository;
+//060923 use App\Service\MixRepository;
+//050923 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -12,7 +15,7 @@ class VinylController extends AbstractController
 {
 	 public function __construct(
         private bool $isDebug,
-        private MixRepository $mixRepository
+//050923        private MixRepository $mixRepository
     )
     {}
 	
@@ -36,8 +39,9 @@ class VinylController extends AbstractController
         ]);
     }
 
+//    public function browse(EntityManagerInterface $entityManager, string $slug = null): Response
     #[Route('/browse/{slug}', name: 'app_browse')]
-    public function browse(string $slug = null): Response
+	public function browse(VinylMixRepository $mixRepository, string $slug = null): Response
     {
 	//130723	dump($this->isDebug);
 		//dd($this->getParameter('kernel.project_dir'));
@@ -51,8 +55,14 @@ class VinylController extends AbstractController
             return $response->toArray();
         });
 		*/
-		$mixes = $this->mixRepository->findAll();
-
+		//310823 $mixes = $this->mixRepository->findAll();
+//050923        $mixRepository = $entityManager->getRepository(VinylMix::class);
+//050923		dd($mixRepository);
+//        $mixes = $mixRepository->findAll();
+//		$mixes = $mixRepository->findBy(['id' => '1']);
+		$mixes = $mixRepository->findBy([], ['votes' => 'DESC']);
+      //010923  dd($mixes);
+		
         return $this->render('vinyl/browse.html.twig', [
             'genre' => $genre,
             'mixes' => $mixes,
