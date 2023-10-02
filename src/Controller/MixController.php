@@ -32,7 +32,8 @@ class MixController extends AbstractController
         ));
     }
 	
-    #[Route('/mix/{id}', name: 'app_mix_show')]
+//280923    #[Route('/mix/{id}', name: 'app_mix_show')]
+	#[Route('/mix/{slug}', name: 'app_mix_show')]
 //140923    public function show($id, VinylMixRepository $mixRepository): Response
 	public function show(VinylMix $mix): Response
     {
@@ -63,7 +64,7 @@ class MixController extends AbstractController
 		$this->addFlash('success', 'Vote counted!');
 		
         return $this->redirectToRoute('app_mix_show', [
-            'id' => $mix->getId(),
+            'slug' => $mix->getSlug(),
         ]);		
     }	
 }
