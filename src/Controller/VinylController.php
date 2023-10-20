@@ -6,7 +6,10 @@ namespace App\Controller;
 use App\Repository\VinylMixRepository;
 //060923 use App\Service\MixRepository;
 //050923 use Doctrine\ORM\EntityManagerInterface;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
+use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use function Symfony\Component\String\u;
@@ -41,7 +44,7 @@ class VinylController extends AbstractController
 
 //    public function browse(EntityManagerInterface $entityManager, string $slug = null): Response
     #[Route('/browse/{slug}', name: 'app_browse')]
-	public function browse(VinylMixRepository $mixRepository, string $slug = null): Response
+	public function browse(VinylMixRepository $mixRepository, Request $request, string $slug = null): Response
     {
 	//130723	dump($this->isDebug);
 		//dd($this->getParameter('kernel.project_dir'));
@@ -61,13 +64,25 @@ class VinylController extends AbstractController
 //        $mixes = $mixRepository->findAll();
 //		$mixes = $mixRepository->findBy(['id' => '1']);
 //080923		$mixes = $mixRepository->findBy([], ['votes' => 'DESC']);
-		$mixes = $mixRepository->findAllOrderedByVotes($slug);
+//171023		$mixes = $mixRepository->findAllOrderedByVotes($slug);
+		$queryBuilder = $mixRepository->createOrderedByVotesQueryBuilder($slug);
+        $adapter = new QueryAdapter($queryBuilder);
+        $pagerfanta = Pagerfanta::createForCurrentPageWithMaxPerPage(
+            $adapter,
+            $request->query->get('page', 1),
+            9
+        );
+        return $this->render('vinyl/browse.html.twig', [
+            'genre' => $genre,
+            'pager' => $pagerfanta,
+        ]);		
       //010923  dd($mixes);
-		
+		/*171023
         return $this->render('vinyl/browse.html.twig', [
             'genre' => $genre,
             'mixes' => $mixes,
         ]);
+		*/
     }
 	private function getMixes(): array
     {
